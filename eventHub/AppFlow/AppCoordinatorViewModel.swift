@@ -15,7 +15,7 @@ final class AppCoordinatorViewModel: ObservableObject {
         case auth
     }
 
-    @Published var flow: FlowState = .main
+    @Published var flow: FlowState = .auth
 
     func showMain() {
         flow = .main

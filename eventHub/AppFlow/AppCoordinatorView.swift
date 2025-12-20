@@ -15,22 +15,16 @@ struct AppCoordinatorView: View {
     var body: some View {
         Group {
             switch viewModel.flow {
-            case .main:
-                MainCoordinatorView(
-                    onLogoutRequested: {
-                        // Logout ღილაკი
-                        viewModel.showAuth()
-                    }
-                )
-
             case .auth:
-                Text("Auth Flow ")
-                    .onAppear {
-                        // დროებით, ავტომატურად გადავდივართ main-ზე
-                        DispatchQueue.main.async {
-                            viewModel.showMain()
-                        }
-                    }
+                SignInView(
+                    onSignInSuccess: { viewModel.showMain() },
+                    onSignUp: { /* TODO:  SignUp მივაბათ */ },
+                    onForgotPassword: {/* TODO:  Forgot მივაბათ */ }
+                )
+                
+            case .main:
+                MainCoordinatorView()
+           
             }
         }
     }
