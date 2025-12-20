@@ -13,6 +13,7 @@ final class AppCoordinatorViewModel: ObservableObject {
     enum FlowState {
         case main
         case auth
+        case forgotPassword
     }
 
     @Published var flow: FlowState = .auth
@@ -23,5 +24,8 @@ final class AppCoordinatorViewModel: ObservableObject {
 
     func showAuth() {
         flow = .auth
+    }
+    func showForgotPassword() {
+        flow = .forgotPassword
     }
 }

@@ -19,9 +19,14 @@ struct AppCoordinatorView: View {
                 SignInView(
                     onSignInSuccess: { viewModel.showMain() },
                     onSignUp: { /* TODO:  SignUp მივაბათ */ },
-                    onForgotPassword: {/* TODO:  Forgot მივაბათ */ }
+                    onForgotPassword: {viewModel.showForgotPassword() }
                 )
-                
+            case .forgotPassword:
+                         ForgotPasswordView(
+                             onBackToSignIn: {
+                                 viewModel.showAuth()
+                             }
+                         )
             case .main:
                 MainCoordinatorView()
            
