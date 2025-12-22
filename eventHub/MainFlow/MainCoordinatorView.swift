@@ -10,13 +10,10 @@ import SwiftUI
 
 struct MainCoordinatorView: View {
 
-    let onLogoutRequested: () -> Void
 
     @StateObject private var viewModel = MainCoordinatorViewModel()
 
-    init(onLogoutRequested: @escaping () -> Void) {
-        self.onLogoutRequested = onLogoutRequested
-    }
+  
 
     var body: some View {
         TabView(selection: $viewModel.selectedTab) {
