@@ -6,45 +6,37 @@
 //
 
 
-
 import SwiftUI
 
 struct TeamBuildingEventCardView: View {
     let item: TeamBuildingEventItem
 
-    private let cardCornerRadius: CGFloat = 14
-    private let imageCornerRadius: CGFloat = 12
-    private let imageHeight: CGFloat = 140
-
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
 
-            // MARK: - Image placeholder
-            RoundedRectangle(cornerRadius: imageCornerRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: 12)
                 .fill(Color(.systemGray5))
-                .frame(height: imageHeight)
+                .frame( height: 140)
                 .overlay(
                     Text("Event Image: \(item.title)")
                         .font(.system(size: 12))
                         .foregroundColor(Color(.systemGray))
                 )
 
-            // MARK: - Title + badge
-            HStack(alignment: .top, spacing: 8) {
+            HStack(alignment: .top) {
                 Text(item.title)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .regular))
                     .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
 
                 Spacer()
 
-                Text(item.status.badgeText)
+                Text(item.badgeText)
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.black)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
                     .background(
-                        RoundedRectangle(cornerRadius: 100, style: .continuous)
+                        RoundedRectangle(cornerRadius: 100)
                             .fill(Color.white)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 100)
@@ -53,82 +45,54 @@ struct TeamBuildingEventCardView: View {
                     )
             }
 
-            // MARK: - Description
             Text(item.subtitle)
                 .font(.system(size: 13))
                 .foregroundColor(Color(.systemGray))
-                .multilineTextAlignment(.leading)
 
-            // MARK: - Date / Time / Location
-            VStack(alignment: .leading, spacing: 4) {
-
-                HStack(spacing: 6) {
-                    Image(systemName: "calendar")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(.systemGray))
-                    Text(item.dateText)
-                        .font(.system(size: 13))
-                        .foregroundColor(Color(.systemGray))
-                    Spacer()
-                }
-
-                HStack(spacing: 6) {
-                    Image(systemName: "clock")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(.systemGray))
-                    Text(item.timeText)
-                        .font(.system(size: 13))
-                        .foregroundColor(Color(.systemGray))
-                    Spacer()
-                }
-
-                HStack(spacing: 6) {
-                    Image(systemName: "mappin.and.ellipse")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(.systemGray))
-                    Text(item.location)
-                        .font(.system(size: 13))
-                        .foregroundColor(Color(.systemGray))
-                    Spacer()
-                }
+            HStack(spacing: 6) {
+                Image(systemName: "calendar")
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(.systemGray))
+                Text(item.dateText)
+                    .font(.system(size: 13))
+                    .foregroundColor(Color(.systemGray))
             }
 
-            // MARK: - Primary button
-            Button {
-                
-            } label: {
-                Text(item.status.actionTitle)
+            HStack(spacing: 6) {
+                Image(systemName: "clock")
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(.systemGray))
+                Text(item.timeText)
+                    .font(.system(size: 13))
+                    .foregroundColor(Color(.systemGray))
+            }
+
+            HStack(spacing: 6) {
+                Image(systemName: "mappin.and.ellipse")
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(.systemGray))
+                Text(item.location)
+                    .font(.system(size: 13))
+                    .foregroundColor(Color(.systemGray))
+            }
+
+            Button {} label: {
+                Text(item.actionTitle)
                     .font(.system(size: 15, weight: .semibold))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(Color.black)
                     .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-            .padding(.top, 4)
         }
         .padding(14)
         .background(
-            RoundedRectangle(cornerRadius: cardCornerRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: 14)
                 .fill(Color.white)
         )
         .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
     }
 }
 
-//#Preview {
-//    ZStack {
-//        Color(.systemGray6).ignoresSafeArea()
-//        TeamBuildingEventCardView(
-//            item: TeamBuildingEventItem(
-//                title: "Annual Team Building Summit",
-//                subtitle: "Join us for a full day of engaging activities and workshops.",
-//                dateText: "Fri, Dec 19, 2025",
-//                timeText: "09:00 AM - 05:00 PM",
-//                location: "Grand Conference Hall",
-//                status: .open(spotsLeft: 8),
-//            )
-//        )
-//        .padding(.horizontal, 16) 
-//    }
-//}
+

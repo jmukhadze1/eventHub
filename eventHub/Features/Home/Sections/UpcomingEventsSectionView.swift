@@ -22,7 +22,7 @@ struct UpcomingEventsSection: View {
                 Spacer()
 
                 NavigationLink {
-                    TeamBuildingListView(service: MockTeamBuildingDataService())
+                    TeamBuildingListView()
                 } label: {
                     Text("View all")
                         .font(.system(size: 14, weight: .semibold))
