@@ -21,7 +21,9 @@ struct UpcomingEventsSection: View {
 
                 Spacer()
 
-                Button(action: {}) {
+                NavigationLink {
+                    TeamBuildingListView(service: MockTeamBuildingDataService())
+                } label: {
                     Text("View all")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.black)
