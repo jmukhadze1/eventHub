@@ -117,6 +117,5 @@ extension NetworkClient {
             throw APIError.serverError(statusCode: http.statusCode, message: message)
         }
 
-        // წარმატებაზე არაფერს ვაბრუნებთ – უბრალოდ ჩუმად გავდივართ.
     }
 }
