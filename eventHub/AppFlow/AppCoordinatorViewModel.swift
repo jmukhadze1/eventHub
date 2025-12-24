@@ -14,6 +14,7 @@ final class AppCoordinatorViewModel: ObservableObject {
         case main
         case auth
         case forgotPassword
+        case signUp
     }
 
     @Published var flow: FlowState = .auth
@@ -27,5 +28,8 @@ final class AppCoordinatorViewModel: ObservableObject {
     }
     func showForgotPassword() {
         flow = .forgotPassword
+    }
+    func signUp() {
+        flow = .signUp
     }
 }

@@ -10,7 +10,8 @@
 import SwiftUI
 
 struct SignUpView: View {
-    
+    let onBackToSignIn: () -> Void
+
     @StateObject private var viewModel = SignUpViewModel()
     
     @State private var isAgreed = false
@@ -34,7 +35,6 @@ struct SignUpView: View {
                 } .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
                 
-                // Name fields
                 HStack(spacing:16){
                     
                     TextField("John", text: $viewModel.firstName)
@@ -57,7 +57,6 @@ struct SignUpView: View {
                     
                 }.padding()
                 
-                // Email field
                 Text("Email")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
@@ -70,13 +69,12 @@ struct SignUpView: View {
                     .background(
                         RoundedRectangle(cornerRadius: 6)
                             .stroke(Color.gray.opacity(0.35), lineWidth: 1)
-                    ) .onChange(of: viewModel.email) { _ in
+                    ) .onChange(of: viewModel.email) { _, _ in
                         viewModel.validateEmail()
                     }
                     .padding(.horizontal)
                 
                 
-                // Error text
                 if let emailError = viewModel.emailError {
                     Text(emailError)
                         .foregroundColor(.red)
@@ -84,15 +82,13 @@ struct SignUpView: View {
                         .padding(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                
-                //Phone number
-                
+                                
                 Text("Phone Number")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
                 
                 HStack(spacing:8){
-                    TextField("+1 (000) 000-0000", text: $viewModel.phoneNumber)
+                    TextField("555 777 777", text: $viewModel.phoneNumber)
                         .textInputAutocapitalization(.never)
                         .keyboardType(.numberPad)
                         .padding(.horizontal, 12)
@@ -100,8 +96,8 @@ struct SignUpView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.gray.opacity(0.35), lineWidth: 1)
-                        ) .onChange(of: viewModel.phoneNumber) { value in
-                            viewModel.updatePhone(value)
+                        ) .onChange(of: viewModel.phoneNumber) { _, newValue in
+                            viewModel.updatePhone(newValue)
                         }
                     
                     
@@ -120,7 +116,6 @@ struct SignUpView: View {
                     
                 }.padding(.horizontal)
                 
-                // Error text
                 if let phoneError = viewModel.phoneError {
                     Text(phoneError)
                         .foregroundColor(.red)
@@ -129,9 +124,8 @@ struct SignUpView: View {
                         .padding(.leading)
                 }
                 
-                // OPT field
                 HStack(spacing: 4){
-                    Image("OTP")
+                    Image(systemName: "ellipsis.rectangle")
                         .frame(width: 13.125024795532227,height: 13.125024795532227)
                     
                     Text("Enter OTP Code")
@@ -154,14 +148,13 @@ struct SignUpView: View {
                                     RoundedRectangle(cornerRadius: 6)
                                         .stroke(Color.gray.opacity(0.35))
                                 )
-                                .onChange(of: viewModel.otpFields[index]) { value in
-                                    viewModel.updateOTP(index: index, value: value)
+                                .onChange(of: viewModel.otpFields[index]) { oldValue, newValue in
+                                    viewModel.updateOTP(index: index, value: newValue)
                                 }
                         }
                         
                     }
                     
-                    // OTP error
                     if let otpError = viewModel.otpError {
                         Text(otpError)
                             .foregroundColor(.red)
@@ -170,13 +163,8 @@ struct SignUpView: View {
                 }
                 .padding(.horizontal)
                 
+       
                 
-                HStack(spacing: 100){
-                    Text("Code expires in 00:50")
-                    Text("Resend Code")
-                }.padding(.horizontal)
-                
-                // Department
                 
                 Text("Department")
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -205,7 +193,6 @@ struct SignUpView: View {
                 }
                 .padding(.horizontal)
                 
-                // dep error
                 if let error = viewModel.departmentError {
                     Text(error)
                         .foregroundColor(.red)
@@ -214,13 +201,12 @@ struct SignUpView: View {
                         .padding(.leading)
                 }
                 
-                // Password Field
                 HStack{
                     
                     Text("Password")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading)
-                    Image("Question")
+                    Image(systemName: "questionmark.circle")
                         .padding(.trailing)
                 }
                 
@@ -231,10 +217,10 @@ struct SignUpView: View {
                         RoundedRectangle(cornerRadius: 6)
                             .stroke(Color.gray.opacity(0.35), lineWidth: 1)
                     )
-                    .onChange(of: viewModel.password) { _ in
-                        viewModel.validatePassword()
-                        viewModel.validateConfirmPassword()
-                    }
+                    .onChange(of: viewModel.password) { _, _ in
+                            viewModel.validatePassword()
+                            viewModel.validateConfirmPassword()
+                        }
                     .padding(.horizontal)
                 
                 if let passwordError = viewModel.passwordError {
@@ -251,13 +237,12 @@ struct SignUpView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
                 
-                // Confirm password
                 HStack{
                     
                     Text("Confirm Password")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading)
-                    Image("Question")
+                    Image(systemName: "questionmark.circle")
                         .padding(.trailing)
                 }
                 
@@ -268,12 +253,11 @@ struct SignUpView: View {
                         RoundedRectangle(cornerRadius: 6)
                             .stroke(Color.gray.opacity(0.35), lineWidth: 1)
                     )
-                    .onChange(of: viewModel.confirmedPassword) { _ in
-                        viewModel.validateConfirmPassword()
-                    }
+                    .onChange(of: viewModel.confirmedPassword) { _, _ in
+                            viewModel.validateConfirmPassword()
+                        }
                     .padding(.horizontal)
                 
-                //error
                 if let confirmError = viewModel.confirmPasswordError {
                     Text(confirmError)
                         .foregroundColor(.red)
@@ -283,7 +267,6 @@ struct SignUpView: View {
                 }
                 
             }
-            //Checkmark
             HStack {
                 Button(action: { isAgreed.toggle() }) {
                     Image(systemName: isAgreed ? "checkmark.square.fill" : "square")
@@ -296,12 +279,11 @@ struct SignUpView: View {
                 .padding(.horizontal)
             
             
-            //Create account button
             Button(action: {
                 viewModel.createAccount { success in
                     if success {
                         print("Account CREATED")
-                        
+                        onBackToSignIn()  
                     }
                 }
             }) {
@@ -320,20 +302,26 @@ struct SignUpView: View {
             .padding(.horizontal)
             
             
-            HStack{
+            HStack {
                 Text("Already have an account?")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
-                
-                Text("sign up")
-                    .padding(.trailing)
+
+                Button(action: {
+                    onBackToSignIn()
+                }) {
+                    Text("Sign In")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.black)
+                }
+                .padding(.trailing)
             }
+
             
-            
-        } // sablooo
+        } 
     }
 }
 
 #Preview {
-    SignUpView()
+    SignUpView(onBackToSignIn: { })
 }
