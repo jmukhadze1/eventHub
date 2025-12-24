@@ -12,7 +12,9 @@ struct eventHubApp: App {
     
     var body: some Scene {
         WindowGroup {
-            AppCoordinatorView()
+            NavigationStack {
+                HomeView()
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Models
 struct UpcomingEventItem: Identifiable {
-    let id = UUID()
+    let id = UUID().uuidString
     let day: String
     let month: String
     let title: String
