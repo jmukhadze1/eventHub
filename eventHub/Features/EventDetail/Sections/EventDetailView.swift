@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct EventDetailView: View {
-
     @StateObject private var viewModel: EventDetailViewModel
 
     init(eventId: String, service: EventDetailServiceProtocol) {
@@ -33,7 +32,6 @@ struct EventDetailView: View {
     @ViewBuilder
     private var content: some View {
         if let event = viewModel.event {
-            // გვაქვს მონაცემი – ვხატავთ სრულ გვერდს
             scrollContent(event: event)
         } else if viewModel.isLoading {
             VStack {
@@ -59,7 +57,6 @@ struct EventDetailView: View {
         }
     }
 
-    // MARK: - მთავარი scroll content (სექციები)
 
     private func scrollContent(event: EventDetailItem) -> some View {
         ScrollView {

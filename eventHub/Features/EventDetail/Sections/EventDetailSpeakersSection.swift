@@ -6,11 +6,6 @@
 //
 
 
-//
-//  EventDetailSpeakersSection.swift
-//  eventHub
-//
-
 import SwiftUI
 
 struct EventDetailSpeakersSection: View {

@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 struct HomeScreenData {
     let upcomingEvents: [UpcomingEventItem]
     let categories: [CategoryItem]
@@ -14,76 +15,22 @@ struct HomeScreenData {
     let faqItems: [FAQItem]
 }
 
-// სერვისის პროტოკოლი – აქ ექნება ნამდვილი API
+
 protocol HomeDataServiceProtocol {
     func fetchHomeScreenData() async throws -> HomeScreenData
 }
 
-//Mock
-struct MockHomeDataService: HomeDataServiceProtocol {
+
+struct APIHomeDataService: HomeDataServiceProtocol {
 
     func fetchHomeScreenData() async throws -> HomeScreenData {
-        try await Task.sleep(nanoseconds: 300_000_000)
+        let page = try await NetworkClient.shared.fetchEventsPage(page: 1, pageSize: 20)
+        let events = page.items
 
-        let upcoming: [UpcomingEventItem] = [
-            UpcomingEventItem(
-                day: "18",
-                month: "JAN",
-                title: "Annual Team Building Summit",
-                timeRange: "08:00 AM – 05:00 PM",
-                location: "Grand Conference Hall",
-                description: "Join us for a full day of engaging activities and networking opportunities.",
-                metaText: "102 registered • 8 spots left",
-                statusLabel: nil
-            ),
-            UpcomingEventItem(
-                day: "20",
-                month: "JAN",
-                title: "Leadership Workshop",
-                timeRange: "02:00 PM – 04:30 PM",
-                location: "Training Room B",
-                description: "Enhance your leadership skills with this interactive workshop.",
-                metaText: "28 registered • 2 spots left",
-                statusLabel: nil
-            ),
-            UpcomingEventItem(
-                day: "24",
-                month: "JAN",
-                title: "Happy Friday: Game Night",
-                timeRange: "06:00 PM – 09:00 PM",
-                location: "Recreation Lounge",
-                description: "Unwind after a productive week with board games and video games.",
-                metaText: "30 registered • Full",
-                statusLabel: "Waitlisted"
-            )
-        ]
-
-        let categories: [CategoryItem] = [
-            CategoryItem(systemImageName: "person.3",         title: "Team Building",  subtitle: "12 events"),
-            CategoryItem(systemImageName: "sportscourt",      title: "Sports",         subtitle: "8 events"),
-            CategoryItem(systemImageName: "hammer",           title: "Workshops",      subtitle: "18 events"),
-            CategoryItem(systemImageName: "sun.max",          title: "Happy Fridays",  subtitle: "4 events"),
-            CategoryItem(systemImageName: "globe",            title: "Cultural",       subtitle: "6 events"),
-            CategoryItem(systemImageName: "heart.text.square",title: "Wellness",       subtitle: "9 events")
-        ]
-
-        let trending: [TrendingEventItem] = [
-            TrendingEventItem(
-                title: "Tech Talk: AI in Business",
-                dateRange: "Jan 26, 2025"
-            ),
-            TrendingEventItem(
-                title: "Annual Hackathon",
-                dateRange: "Feb 10–12, 2025"
-            )
-        ]
-
-        let faq: [FAQItem] = [
-            FAQItem(
-                question: "What if I need to cancel?",
-                answer: "You can cancel your registration up to 24 hours before the event through this app. This will allow someone from the waitlist to attend."
-            )
-        ]
+        let upcoming = makeUpcomingEvents(from: events)
+        let categories = makeCategories(from: events)
+        let trending = makeTrending(from: events)
+        let faq = makeFAQ(from: events)
 
         return HomeScreenData(
             upcomingEvents: upcoming,
@@ -91,5 +38,125 @@ struct MockHomeDataService: HomeDataServiceProtocol {
             trendingEvents: trending,
             faqItems: faq
         )
+    }
+
+    // MARK: - UpcomingEventsSection mapping
+
+    private func makeUpcomingEvents(from events: [EventRemote]) -> [UpcomingEventItem] {
+        events.map { event in
+            let start = event.date.startDate
+            let end = event.date.endDate
+
+            let day = start.formatted(.dateTime.day())
+            let month = start.formatted(.dateTime.month(.abbreviated))
+
+            let timeRange = "\(start.formatted(date: .omitted, time: .shortened)) – \(end.formatted(date: .omitted, time: .shortened))"
+
+            let meta = "\(event.capacity.currentlyRegistered) registered • max \(event.capacity.maxCapacity)"
+
+            let statusLabel: String?
+            if event.registrationStatus == "Open" {
+                statusLabel = nil
+            } else {
+                statusLabel = event.registrationStatus   // напр. "Closed"
+            }
+
+            return UpcomingEventItem(
+                id: event.eventId, 
+                day: day,
+                month: month,
+                title: event.title,
+                timeRange: timeRange,
+                location: event.location.venueName,
+                description: event.description,
+                metaText: meta,
+                statusLabel: statusLabel
+            )
+        }
+    }
+
+    // MARK: - CategorySection mapping
+
+    private func makeCategories(from events: [EventRemote]) -> [CategoryItem] {
+        var counts: [String: Int] = [:]
+
+        for event in events {
+            let name = event.category.name
+            counts[name, default: 0] += 1
+        }
+
+        let items: [CategoryItem] = counts.map { (name, count) in
+            CategoryItem(
+                systemImageName: sfSymbol(for: name),
+                title: readableCategoryName(name),
+                subtitle: "\(count) events"
+            )
+        }
+
+        return items.sorted { $0.title < $1.title }
+    }
+
+    private func sfSymbol(for category: String) -> String {
+        switch category {
+        case "TeamBuilding":
+            return "person.3"
+        case "Sports":
+            return "sportscourt"
+        case "Workshop":
+            return "hammer"
+        case "Wellness":
+            return "heart.text.square"
+        default:
+            return "calendar"
+        }
+    }
+
+    private func readableCategoryName(_ raw: String) -> String {
+        switch raw {
+        case "TeamBuilding": return "Team Building"
+        default: return raw
+        }
+    }
+
+    // MARK: - TrendingEventsSection mapping
+
+    private func makeTrending(from events: [EventRemote]) -> [TrendingEventItem] {
+        let sorted = events.sorted {
+            $0.capacity.currentlyRegistered > $1.capacity.currentlyRegistered
+        }
+
+        let top = Array(sorted.prefix(5))
+
+        return top.map { event in
+            let start = event.date.startDate
+            let end = event.date.endDate
+
+            let startStr = start.formatted(.dateTime.day().month().year())
+            let endStr = end.formatted(.dateTime.day().month().year())
+
+            let dateRange: String
+            if startStr == endStr {
+                dateRange = startStr
+            } else {
+                dateRange = "\(startStr) – \(endStr)"
+            }
+
+            return TrendingEventItem(
+                title: event.title,
+                dateRange: dateRange
+            )
+        }
+    }
+
+    // MARK: - FAQSection
+    private func makeFAQ(from events: [EventRemote]) -> [FAQItem] {
+
+        [
+            FAQItem(
+                question: "What if I need to cancel?",
+                answer: "You can cancel your registration up to 24 hours before the event through this app. This will allow someone from the waitlist to attend."
+            ),
+          
+        ]
     }
 }

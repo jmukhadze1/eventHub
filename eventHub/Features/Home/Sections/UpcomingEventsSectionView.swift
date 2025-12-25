@@ -114,16 +114,21 @@ struct UpcomingEventCardView: View {
 
                     Spacer()
 
-                    Button(action: {}) {
+                    NavigationLink {
+                        EventDetailView(
+                                eventId: String(event.id),
+                                service: MockEventDetailService()
+                            )
+                    } label: {
                         HStack(spacing: 4) {
-                               Text("View Details")
-                                   .font(.system(size: 14, weight: .semibold))
-                                   .foregroundColor(.black)
-                               Image(systemName: "arrow.right")
-                                   .font(.system(size: 12, weight: .semibold))
-                                   .foregroundColor(.black)
-                           }
-                        .foregroundColor(.blue)
+                            Text("View Details")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.black)
+
+                            Image(systemName: "arrow.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.black)
+                        }
                     }
                 }
                 .padding(.top, 2)

@@ -40,7 +40,6 @@ struct SpeakerItem: Identifiable {
     let role: String
 }
 
-// Mock data – Preview/MockService-სთვის
 enum EventDetailMockData {
     static let sample = EventDetailItem(
         id: "event_1",
