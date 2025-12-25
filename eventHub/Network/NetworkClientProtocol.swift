@@ -84,7 +84,7 @@ final class NetworkClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-
+        decoder.dateDecodingStrategy = .iso8601
         return try decoder.decode(Response.self, from: data)
     }
 }
@@ -119,3 +119,21 @@ extension NetworkClient {
 
     }
 }
+extension NetworkClient {
+
+    func fetchEventsPage(
+        page: Int = 1,
+        pageSize: Int = 10
+    ) async throws -> EventsPageResponse {
+
+        return try await get(
+            "events",
+            query: [
+                "Page": page,
+                "PageSize": pageSize
+            ],
+            authorized: true   // თუ არ გინდა auth — false
+        )
+    }
+}
+

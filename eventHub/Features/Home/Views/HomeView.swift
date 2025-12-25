@@ -35,12 +35,14 @@ struct HomeView: View {
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
-                        HomeHeaderSection(userFirstName: viewModel.userFirstName)
+                          HomeHeaderSection(userFirstName: viewModel.userFirstName)
+
                         UpcomingEventsSection(events: viewModel.upcomingEvents)
-                        CategorySection(categories: viewModel.categories)
-                        TrendingEventsSection(trendingEvents: viewModel.trendingEvents)
-                        FAQSection(faqItems: viewModel.faqItems)
-                    }
+
+                          CategorySection(categories: viewModel.categories)
+                          TrendingEventsSection(trendingEvents: viewModel.trendingEvents)
+                          FAQSection(faqItems: viewModel.faqItems)
+                      }
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
                     .padding(.bottom, 24)

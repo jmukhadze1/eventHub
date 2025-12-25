@@ -23,13 +23,12 @@ final class HomeViewModel: ObservableObject {
 
     let userFirstName: String = "Sarah"
 
-    // MARK: - Dependencies
+
     private let dataService: HomeDataServiceProtocol
 
-    init(dataService: HomeDataServiceProtocol = MockHomeDataService()) {
-        self.dataService = dataService
-    }
-
+       init(dataService: HomeDataServiceProtocol = APIHomeDataService()) {
+           self.dataService = dataService
+       }
     // MARK: - Intent
     func loadHomeScreen() async {
         isLoading = true
