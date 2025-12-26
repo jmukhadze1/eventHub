@@ -58,7 +58,7 @@ struct APIHomeDataService: HomeDataServiceProtocol {
             if event.registrationStatus == "Open" {
                 statusLabel = nil
             } else {
-                statusLabel = event.registrationStatus   // напр. "Closed"
+                statusLabel = event.registrationStatus 
             }
 
             return UpcomingEventItem(

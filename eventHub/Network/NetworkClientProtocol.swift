@@ -132,7 +132,7 @@ extension NetworkClient {
                 "Page": page,
                 "PageSize": pageSize
             ],
-            authorized: true   // თუ არ გინდა auth — false
+            authorized: true  
         )
     }
 }
