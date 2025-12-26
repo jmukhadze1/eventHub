@@ -119,6 +119,7 @@ extension NetworkClient {
 
     }
 }
+
 extension NetworkClient {
 
     func fetchEventsPage(
@@ -126,14 +127,23 @@ extension NetworkClient {
         pageSize: Int = 10
     ) async throws -> EventsPageResponse {
 
-        return try await get(
+        let events: [EventRemote] = try await get(
             "events",
             query: [
                 "Page": page,
                 "PageSize": pageSize
             ],
-            authorized: true  
+            authorized: true
+        )
+
+        return EventsPageResponse(
+            items: events,
+            totalCount: nil,
+            page: nil,
+            pageSize: nil,
+            totalPages: nil
         )
     }
 }
+
 

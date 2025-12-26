@@ -43,6 +43,8 @@ final class HomeViewModel: ObservableObject {
             isLoading      = false
         } catch {
             isLoading = false
+            print("❌ HOME LOAD ERROR:", error)
+
             errorMessage = "ვერ ჩაიტვირთა მთავარი გვერდის მონაცემები."
         }
     }

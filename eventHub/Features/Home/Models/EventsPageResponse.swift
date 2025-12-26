@@ -10,10 +10,10 @@ import Foundation
 
 struct EventsPageResponse: Decodable {
     let items: [EventRemote]
-    let totalCount: Int
-    let page: Int
-    let pageSize: Int
-    let totalPages: Int
+    let totalCount: Int?
+    let page: Int?
+    let pageSize: Int?
+    let totalPages: Int?
 }
 
 struct EventRemote: Decodable, Identifiable {
